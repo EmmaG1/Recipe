@@ -1,12 +1,17 @@
 package org.wit.recipe.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.snackbar.Snackbar
+import com.squareup.picasso.Picasso
 import org.wit.recipe.R
 import org.wit.recipe.databinding.ActivityRecipeBinding
+import org.wit.recipe.helpers.showImagePicker
 import org.wit.recipe.main.MainApp
 import org.wit.recipe.models.RecipeModel
 import timber.log.Timber
@@ -16,6 +21,7 @@ class RecipeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecipeBinding
     var recipe = RecipeModel()
     lateinit var app: MainApp
+    private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +41,10 @@ class RecipeActivity : AppCompatActivity() {
             binding.recipeTitle.setText(recipe.title)
             binding.description.setText(recipe.description)
             binding.btnAdd.setText(R.string.save_recipe)
+
+            Picasso.get()
+                .load(recipe.image)
+                .into(binding.recipeImage)
         }
 
         binding.btnAdd.setOnClickListener() {
@@ -53,37 +63,12 @@ class RecipeActivity : AppCompatActivity() {
             setResult(RESULT_OK)
             finish()
         }
-//        binding.btnAdd.setOnClickListener() {
-//            recipe.title = binding.recipeTitle.text.toString()
-//            recipe.description = binding.description.text.toString()
-//            if (recipe.title.isNotEmpty()) {
-//                app.recipes.create(recipe.copy())
-//                setResult(RESULT_OK)
-//                finish()
-//            }
-//            else {
-//                Snackbar.make(it,R.string.enter_recipe_title, Snackbar.LENGTH_LONG)
-//                    .show()
-//            }
-//        }
-//        binding.btnAdd.setOnClickListener() {
-//            recipe.title = binding.recipeTitle.text.toString()
-//            recipe.description = binding.description.text.toString()
-//            if (recipe.title.isNotEmpty()) {
-//                //app.recipes.add(recipe.copy())
-//                app.recipes.create(recipe.copy())
-//                i("add Button Pressed: ${recipe}")
-//                for (i in app.recipes.indices) {
-//                    i("Recipe[$i]:${this.app.recipes[i]}")
-//                }
-//            setResult(RESULT_OK)
-//            finish()
-//        }
-//            else {
-//                Snackbar.make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
-//                    .show()
-//            }
-//        }
+
+        //add image
+        binding.chooseImage.setOnClickListener {
+            showImagePicker(imageIntentLauncher)
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -99,93 +84,39 @@ class RecipeActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    private fun registerImagePickerCallback() {
+        imageIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                when(result.resultCode){
+                    RESULT_OK -> {
+                        if (result.data != null) {
+                            i("Got Result ${result.data!!.data}")
+                            recipe.image = result.data!!.data!!
+                            Picasso.get()
+                                .load(recipe.image)
+                                .into(binding.recipeImage)
+                        } // end of if
+                    }
+                    RESULT_CANCELED -> { } else -> { }
+                }
+            }
+    }
+
+//    private fun registerImagePickerCallback() {
+//        imageIntentLauncher =
+//            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+//            { result ->
+//                when(result.resultCode){
+//                    RESULT_OK -> {
+//                        if (result.data != null) {
+//                            i("Got Result ${result.data!!.data}")
+//                        } // end of if
+//                    }
+//                    RESULT_CANCELED -> { } else -> { }
+//                }
+//            }
+//    }
 }
-//class RecipeActivity : AppCompatActivity() {
-//    private lateinit var binding: ActivityRecipeBinding
-//    var recipe = RecipeModel()
-//    var app : MainApp? = null
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        binding = ActivityRecipeBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-//
-//        app = application as MainApp
-//        i("Recipe Activity started...")
-//        binding.btnAdd.setOnClickListener() {
-//            recipe.title = binding.recipeTitle.text.toString()
-//            recipe.description = binding.description.text.toString()
-//            if (recipe.title.isNotEmpty()) {
-//                app!!.recipes.add(recipe.copy())
-//                i("add Button Pressed: ${recipe}")
-//                for (i in app!!.recipes.indices)
-//                { i("Recipe[$i]:${this.app!!.recipes[i]}") }
-//            }
-//            else {
-//                Snackbar.make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
-//                    .show()
-//            }
-//        }
-//    }
-//}
-//class RecipeActivity : AppCompatActivity() {
-//
-//    private lateinit var binding: ActivityRecipeBinding
-//    var recipe = RecipeModel()
-//    val recipes = ArrayList<RecipeModel>()
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        binding = ActivityRecipeBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-//        Timber.plant(Timber.DebugTree())
-//        i("Recipe Activity started...")
-//
-//        binding.btnAdd.setOnClickListener() {
-//            recipe.title = binding.recipeTitle.text.toString()
-//            recipe.description = binding.description.text.toString()
-//            if (recipe.title.isNotEmpty()) {
-//                recipes.add(recipe.copy())
-//                i("add Button Pressed: ${recipe}")
-//                for (i in recipes.indices)
-//                { i("Recipe[$i]:${this.recipes[i]}") }
-//            }
-//            else {
-//                Snackbar.make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
-//                    .show()
-//            }
-//        }
-//    }
-//}
-//class RecipeActivity : AppCompatActivity() {
-//
-//    private lateinit var binding: ActivityRecipeBinding
-//    var recipe = RecipeModel()
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//
-//        binding = ActivityRecipeBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-//
-//        Timber.plant(Timber.DebugTree())
-//        i("Recipe Activity started...")
-//
-////        binding.btnAdd.setOnClickListener() {
-////            i("add Button Pressed")
-////        }
-//
-//        binding.btnAdd.setOnClickListener() {
-//            recipe.title = binding.recipeTitle.text.toString()
-//            if (recipe.title.isNotEmpty()) {
-//                i("add Button Pressed: $recipe.title")
-//            }
-//            else {
-//                Snackbar
-//                    .make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
-//                    .show()
-//            }
-//        }
-//    }
-//}
 
