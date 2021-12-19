@@ -22,8 +22,11 @@ class RecipeActivity : AppCompatActivity() {
     var recipe = RecipeModel()
     lateinit var app: MainApp
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        registerImagePickerCallback()
+        registerMapCallback()
         super.onCreate(savedInstanceState)
         var edit =false
         binding = ActivityRecipeBinding.inflate(layoutInflater)
@@ -69,6 +72,15 @@ class RecipeActivity : AppCompatActivity() {
             showImagePicker(imageIntentLauncher)
         }
 
+        binding.recipeLocation.setOnClickListener {
+            i ("Set Location Pressed")
+        }
+
+        binding.recipeLocation.setOnClickListener {
+            val launcherIntent = Intent(this, MapActivity::class.java)
+            mapIntentLauncher.launch(launcherIntent)
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -83,6 +95,12 @@ class RecipeActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { i("Map Loaded") }
     }
 
     private fun registerImagePickerCallback() {
