@@ -1,4 +1,7 @@
 package org.wit.recipe.models
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-data class RecipeModel(var title: String = "",
-                       var description: String = "")
+@Parcelize
+data class RecipeModel(var id: Long=0, var title: String = "",
+                       var description: String = "") : Parcelable

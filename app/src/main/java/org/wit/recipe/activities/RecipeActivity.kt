@@ -27,23 +27,44 @@ class RecipeActivity : AppCompatActivity() {
 
         app = application as MainApp
         i("Recipe Activity started...")
+
+        if (intent.hasExtra("recipe_edit")) {
+            recipe = intent.extras?.getParcelable("recipe_edit")!!
+            binding.recipeTitle.setText(recipe.title)
+            binding.description.setText(recipe.description)
+        }
+
         binding.btnAdd.setOnClickListener() {
             recipe.title = binding.recipeTitle.text.toString()
             recipe.description = binding.description.text.toString()
             if (recipe.title.isNotEmpty()) {
-                app.recipes.add(recipe.copy())
-                i("add Button Pressed: ${recipe}")
-                for (i in app.recipes.indices) {
-                    i("Recipe[$i]:${this.app.recipes[i]}")
-                }
-            setResult(RESULT_OK)
-            finish()
-        }
+                app.recipes.create(recipe.copy())
+                setResult(RESULT_OK)
+                finish()
+            }
             else {
                 Snackbar.make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
                     .show()
             }
         }
+//        binding.btnAdd.setOnClickListener() {
+//            recipe.title = binding.recipeTitle.text.toString()
+//            recipe.description = binding.description.text.toString()
+//            if (recipe.title.isNotEmpty()) {
+//                //app.recipes.add(recipe.copy())
+//                app.recipes.create(recipe.copy())
+//                i("add Button Pressed: ${recipe}")
+//                for (i in app.recipes.indices) {
+//                    i("Recipe[$i]:${this.app.recipes[i]}")
+//                }
+//            setResult(RESULT_OK)
+//            finish()
+//        }
+//            else {
+//                Snackbar.make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
+//                    .show()
+//            }
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
