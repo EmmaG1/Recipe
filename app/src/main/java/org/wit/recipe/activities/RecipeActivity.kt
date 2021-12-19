@@ -24,7 +24,7 @@ class RecipeActivity : AppCompatActivity() {
     lateinit var app: MainApp
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
-    var location = Location(52.245696, -7.139102, 15f)
+   // var location = Location(52.245696, -7.139102, 15f)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         registerMapCallback()
@@ -75,27 +75,24 @@ class RecipeActivity : AppCompatActivity() {
             showImagePicker(imageIntentLauncher)
         }
 
-//        binding.recipeLocation.setOnClickListener {
-//            i ("Set Location Pressed")
-//        }
 
-        binding.recipeLocation.setOnClickListener {
-            val launcherIntent = Intent(this, MapActivity::class.java)
-                .putExtra("location", location)
-            mapIntentLauncher.launch(launcherIntent)
-        }
 
 //        binding.recipeLocation.setOnClickListener {
-//            val launcherIntent = Intent(this, MapActivity::class.java)
-//            mapIntentLauncher.launch(launcherIntent)
-//        }
-
-//        binding.recipeLocation.setOnClickListener {
-//            val location = Location(52.245696, -7.139102, 15f)
 //            val launcherIntent = Intent(this, MapActivity::class.java)
 //                .putExtra("location", location)
 //            mapIntentLauncher.launch(launcherIntent)
 //        }
+        binding.recipeLocation.setOnClickListener {
+            val location = Location(52.245696, -7.139102, 15f)
+            if (recipe.zoom != 0f) {
+                location.lat =  recipe.lat
+                location.lng = recipe.lng
+                location.zoom = recipe.zoom
+            }
+            val launcherIntent = Intent(this, MapActivity::class.java)
+                .putExtra("location", location)
+            mapIntentLauncher.launch(launcherIntent)
+        }
 
     }
 
@@ -113,11 +110,6 @@ class RecipeActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-//    private fun registerMapCallback() {
-//        mapIntentLauncher =
-//            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-//            { i("Map Loaded") }
-//    }
 
     private fun registerMapCallback() {
         mapIntentLauncher =
@@ -127,8 +119,11 @@ class RecipeActivity : AppCompatActivity() {
                     RESULT_OK -> {
                         if (result.data != null) {
                             i("Got Location ${result.data.toString()}")
-                            location = result.data!!.extras?.getParcelable("location")!!
+                            val location = result.data!!.extras?.getParcelable<Location>("location")!!
                             i("Location == $location")
+                            recipe.lat = location.lat
+                            recipe.lng = location.lng
+                            recipe.zoom = location.zoom
                         } // end of if
                     }
                     RESULT_CANCELED -> { } else -> { }
@@ -155,19 +150,5 @@ class RecipeActivity : AppCompatActivity() {
             }
     }
 
-//    private fun registerImagePickerCallback() {
-//        imageIntentLauncher =
-//            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-//            { result ->
-//                when(result.resultCode){
-//                    RESULT_OK -> {
-//                        if (result.data != null) {
-//                            i("Got Result ${result.data!!.data}")
-//                        } // end of if
-//                    }
-//                    RESULT_CANCELED -> { } else -> { }
-//                }
-//            }
-//    }
 }
 
