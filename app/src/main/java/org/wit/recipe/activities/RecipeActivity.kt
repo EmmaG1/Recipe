@@ -13,6 +13,7 @@ import org.wit.recipe.R
 import org.wit.recipe.databinding.ActivityRecipeBinding
 import org.wit.recipe.helpers.showImagePicker
 import org.wit.recipe.main.MainApp
+import org.wit.recipe.models.Location
 import org.wit.recipe.models.RecipeModel
 import timber.log.Timber
 import timber.log.Timber.i
@@ -23,10 +24,12 @@ class RecipeActivity : AppCompatActivity() {
     lateinit var app: MainApp
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
+    var location = Location(52.245696, -7.139102, 15f)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        registerImagePickerCallback()
         registerMapCallback()
+        registerImagePickerCallback()
+
         super.onCreate(savedInstanceState)
         var edit =false
         binding = ActivityRecipeBinding.inflate(layoutInflater)
@@ -72,14 +75,27 @@ class RecipeActivity : AppCompatActivity() {
             showImagePicker(imageIntentLauncher)
         }
 
-        binding.recipeLocation.setOnClickListener {
-            i ("Set Location Pressed")
-        }
+//        binding.recipeLocation.setOnClickListener {
+//            i ("Set Location Pressed")
+//        }
 
         binding.recipeLocation.setOnClickListener {
             val launcherIntent = Intent(this, MapActivity::class.java)
+                .putExtra("location", location)
             mapIntentLauncher.launch(launcherIntent)
         }
+
+//        binding.recipeLocation.setOnClickListener {
+//            val launcherIntent = Intent(this, MapActivity::class.java)
+//            mapIntentLauncher.launch(launcherIntent)
+//        }
+
+//        binding.recipeLocation.setOnClickListener {
+//            val location = Location(52.245696, -7.139102, 15f)
+//            val launcherIntent = Intent(this, MapActivity::class.java)
+//                .putExtra("location", location)
+//            mapIntentLauncher.launch(launcherIntent)
+//        }
 
     }
 
@@ -97,10 +113,27 @@ class RecipeActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+//    private fun registerMapCallback() {
+//        mapIntentLauncher =
+//            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+//            { i("Map Loaded") }
+//    }
+
     private fun registerMapCallback() {
         mapIntentLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-            { i("Map Loaded") }
+            { result ->
+                when (result.resultCode) {
+                    RESULT_OK -> {
+                        if (result.data != null) {
+                            i("Got Location ${result.data.toString()}")
+                            location = result.data!!.extras?.getParcelable("location")!!
+                            i("Location == $location")
+                        } // end of if
+                    }
+                    RESULT_CANCELED -> { } else -> { }
+                }
+            }
     }
 
     private fun registerImagePickerCallback() {
