@@ -15,7 +15,6 @@ import org.wit.recipe.helpers.showImagePicker
 import org.wit.recipe.main.MainApp
 import org.wit.recipe.models.Location
 import org.wit.recipe.models.RecipeModel
-import timber.log.Timber
 import timber.log.Timber.i
 
 class RecipeActivity : AppCompatActivity() {
@@ -24,7 +23,6 @@ class RecipeActivity : AppCompatActivity() {
     lateinit var app: MainApp
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
-   // var location = Location(52.245696, -7.139102, 15f)
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -75,12 +73,6 @@ class RecipeActivity : AppCompatActivity() {
         }
 
 
-
-//        binding.recipeLocation.setOnClickListener {
-//            val launcherIntent = Intent(this, MapActivity::class.java)
-//                .putExtra("location", location)
-//            mapIntentLauncher.launch(launcherIntent)
-//        }
         binding.recipeLocation.setOnClickListener {
             val location = Location(52.245696, -7.139102, 15f)
             if (recipe.zoom != 0f) {

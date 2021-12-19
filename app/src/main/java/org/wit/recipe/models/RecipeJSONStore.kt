@@ -1,3 +1,5 @@
+//Uncomment this for persistance:
+
 //package org.wit.recipe.models
 //
 //import android.content.Context
@@ -40,9 +42,23 @@
 //        serialize()
 //    }
 //
-//
 //    override fun update(recipe: RecipeModel) {
-//        // todo
+//        var foundRecipe: RecipeModel? = recipes.find { p -> p.id == recipe.id }
+//        if (foundRecipe != null) {
+//            foundRecipe.title = recipe.title
+//            foundRecipe.description = recipe.description
+//            foundRecipe.image = recipe.image
+//            foundRecipe.lat = recipe.lat
+//            foundRecipe.lng = recipe.lng
+//            foundRecipe.zoom = recipe.zoom
+//            logAll()
+//        }
+//    }
+//
+//
+//
+//    override fun delete(recipe: RecipeModel) {
+//        recipes.remove(recipe)
 //    }
 //
 //    private fun serialize() {

@@ -3,14 +3,9 @@ package org.wit.recipe.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-//import android.view.LayoutInflater
-//import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-//import androidx.recyclerview.widget.RecyclerView
 import org.wit.recipe.databinding.ActivityRecipeListBinding
-//import org.wit.recipe.databinding.CardRecipeBinding
 import org.wit.recipe.main.MainApp
-//import org.wit.recipe.models.RecipeModel
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.ActivityResultLauncher
@@ -38,7 +33,6 @@ class RecipeListActivity : AppCompatActivity(), RecipeListener {
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
         loadRecipes()
-        //binding.recyclerView.adapter = RecipeAdapter(app.recipes.findAll(),this)
         registerRefreshCallback()
     }
 
@@ -68,7 +62,7 @@ class RecipeListActivity : AppCompatActivity(), RecipeListener {
     private fun registerRefreshCallback() {
         refreshIntentLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-            { //binding.recyclerView.adapter?.notifyDataSetChanged()
+            { //
                 loadRecipes()
             }
     }
