@@ -27,11 +27,10 @@ class RecipeActivity : AppCompatActivity() {
    // var location = Location(52.245696, -7.139102, 15f)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        registerMapCallback()
-        registerImagePickerCallback()
+
 
         super.onCreate(savedInstanceState)
-        var edit =false
+        var edit =false//
         binding = ActivityRecipeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -93,6 +92,9 @@ class RecipeActivity : AppCompatActivity() {
                 .putExtra("location", location)
             mapIntentLauncher.launch(launcherIntent)
         }
+        registerMapCallback()//
+        registerImagePickerCallback()//
+
 
     }
 
@@ -103,6 +105,10 @@ class RecipeActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.item_delete -> {
+                app.recipes.delete(recipe)
+                finish()
+            }
             R.id.item_cancel -> {
                 finish()
             }

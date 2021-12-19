@@ -37,11 +37,8 @@ class RecipeListActivity : AppCompatActivity(), RecipeListener {
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-       // binding.recyclerView.adapter = RecipeAdapter(app.recipes)
-        //binding.recyclerView.adapter=RecipeAdapter(app.recipes) //might be missing a .finalAll() here
-        //binding.recyclerView.adapter = RecipeAdapter(app.recipes.findAll())
-        binding.recyclerView.adapter = RecipeAdapter(app.recipes.findAll(),this)
-        //binding.recyclerView.
+        loadRecipes()
+        //binding.recyclerView.adapter = RecipeAdapter(app.recipes.findAll(),this)
         registerRefreshCallback()
     }
 
@@ -66,21 +63,25 @@ class RecipeListActivity : AppCompatActivity(), RecipeListener {
         refreshIntentLauncher.launch(launcherIntent)
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        binding.recyclerView.adapter?.notifyDataSetChanged()
-//        super.onActivityResult(requestCode, resultCode, data)
-//    }
 
     //new
     private fun registerRefreshCallback() {
         refreshIntentLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-            { binding.recyclerView.adapter?.notifyDataSetChanged() }
+            { //binding.recyclerView.adapter?.notifyDataSetChanged()
+                loadRecipes()
+            }
     }
 
-//    override fun onRecipeClick(recipe: RecipeModel) {
-//        val launcherIntent = Intent(this, RecipeActivity::class.java)
-//        startActivityForResult(launcherIntent,0)
-//    }
+    private fun loadRecipes() {
+        showRecipes(app.recipes.findAll())
+    }
+
+    fun showRecipes (recipes: List<RecipeModel>) {
+        binding.recyclerView.adapter = RecipeAdapter(recipes, this)
+        binding.recyclerView.adapter?.notifyDataSetChanged()
+    }
+
+
 }
 
