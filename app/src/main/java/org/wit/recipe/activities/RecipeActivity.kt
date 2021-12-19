@@ -19,6 +19,7 @@ class RecipeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var edit =false
         binding = ActivityRecipeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -29,24 +30,42 @@ class RecipeActivity : AppCompatActivity() {
         i("Recipe Activity started...")
 
         if (intent.hasExtra("recipe_edit")) {
+            edit = true
             recipe = intent.extras?.getParcelable("recipe_edit")!!
             binding.recipeTitle.setText(recipe.title)
             binding.description.setText(recipe.description)
+            binding.btnAdd.setText(R.string.save_recipe)
         }
 
         binding.btnAdd.setOnClickListener() {
             recipe.title = binding.recipeTitle.text.toString()
             recipe.description = binding.description.text.toString()
-            if (recipe.title.isNotEmpty()) {
-                app.recipes.create(recipe.copy())
-                setResult(RESULT_OK)
-                finish()
-            }
-            else {
-                Snackbar.make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
+            if (recipe.title.isEmpty()) {
+                Snackbar.make(it,R.string.enter_recipe_title, Snackbar.LENGTH_LONG)
                     .show()
+            } else {
+                if (edit) {
+                    app.recipes.update(recipe.copy())
+                } else {
+                    app.recipes.create(recipe.copy())
+                }
             }
+            setResult(RESULT_OK)
+            finish()
         }
+//        binding.btnAdd.setOnClickListener() {
+//            recipe.title = binding.recipeTitle.text.toString()
+//            recipe.description = binding.description.text.toString()
+//            if (recipe.title.isNotEmpty()) {
+//                app.recipes.create(recipe.copy())
+//                setResult(RESULT_OK)
+//                finish()
+//            }
+//            else {
+//                Snackbar.make(it,R.string.enter_recipe_title, Snackbar.LENGTH_LONG)
+//                    .show()
+//            }
+//        }
 //        binding.btnAdd.setOnClickListener() {
 //            recipe.title = binding.recipeTitle.text.toString()
 //            recipe.description = binding.description.text.toString()

@@ -60,6 +60,11 @@ class RecipeListActivity : AppCompatActivity(), RecipeListener {
         launcherIntent.putExtra("recipe_edit", recipe)
         startActivityForResult(launcherIntent,0)
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        binding.recyclerView.adapter?.notifyDataSetChanged()
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 //    override fun onRecipeClick(recipe: RecipeModel) {
 //        val launcherIntent = Intent(this, RecipeActivity::class.java)
 //        startActivityForResult(launcherIntent,0)
